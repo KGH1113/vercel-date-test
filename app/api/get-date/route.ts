@@ -1,5 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
+process.env.TZ = 'Asia/Seoul';
+
 export async function GET(request: NextRequest) {
   const dateQueryParam = request.nextUrl.searchParams.get("date");
 
@@ -9,6 +11,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     serverSideDateNumber: Number(serverSideDate),
     serverSideDateStr: serverSideDate.toLocaleString(),
+    koreaServerSideDateStr: "",
     clientSideDateNumber: Number(dateQueryParam),
     clientSideDateStr:
       clientSideDate.toDateString() +
@@ -16,5 +19,6 @@ export async function GET(request: NextRequest) {
       clientSideDate.getHours() +
       " " +
       clientSideDate.getMinutes(),
+    koreaClientSideDateStr: "",
   });
 }
