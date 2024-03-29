@@ -1,5 +1,20 @@
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET() {
-  return NextResponse.json({ data: Number(new Date()) });
+export async function GET(request: NextRequest) {
+  const dateQueryParam = request.nextUrl.searchParams.get("date");
+
+  const serverSideDate = new Date(Number(new Date()));
+  const clientSideDate = new Date(Number(dateQueryParam));
+
+  return NextResponse.json({
+    serverSideDateNumber: Number(serverSideDate),
+    serverSideDateStr: serverSideDate.toLocaleString(),
+    clientSideDateNumber: Number(dateQueryParam),
+    clientSideDateStr:
+      clientSideDate.toDateString() +
+      " " +
+      clientSideDate.getHours() +
+      " " +
+      clientSideDate.getMinutes(),
+  });
 }

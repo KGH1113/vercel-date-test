@@ -4,7 +4,16 @@ import Image from "next/image";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+interface ServerResponse {
+  serverSideDateNumber: number;
+  serverSideDateStr: string;
+  clientSideDateNumber: number;
+  clientSideDateStr: string;
+}
+
 export default function Home() {
+  const [clientSideTime, setClientSideTime] = useState<number>(0);
+  const [serverSideTime, setServerSideTime] = useState<ServerResponse>();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -42,22 +51,37 @@ export default function Home() {
           priority
         />
       </div>
-      <button
-        onClick={(e) => {
-          console.log(Number(new Date()));
-        }}
-      >
-        getClientSideTime
-      </button>
-      <button
-        onClick={(e) => {
-          axios.get("/api/get-date").then((res) => {
-            console.log(res.data);
-          });
-        }}
-      >
-        getServerSideTime
-      </button>
+      <div className="flex gap-3 justify-center items-center">
+        <button
+          className="border-white border-[1px] p-3 rounded-lg"
+          onClick={(e) => {
+            setClientSideTime(Number(new Date()));
+          }}
+        >
+          getClientSideTime
+        </button>
+        <p>{clientSideTime}</p>
+      </div>
+      <div className="flex gap-3 justify-center items-center">
+        <button
+          className="border-white border-[1px] p-3 rounded-lg"
+          onClick={(e) => {
+            axios
+              .get(`/api/get-date?date=${Number(new Date())}`)
+              .then((res) => {
+                setServerSideTime(res.data);
+              });
+          }}
+        >
+          getServerSideTime
+        </button>
+        <div>
+          <p>clientSideDateNumber: {serverSideTime?.clientSideDateNumber}</p>
+          <p>clientSideDateStr: {serverSideTime?.clientSideDateStr}</p>
+          <p>serverSideDateNumber: {serverSideTime?.serverSideDateNumber}</p>
+          <p>serverSideDateStr: {serverSideTime?.serverSideDateStr}</p>
+        </div>
+      </div>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
